@@ -13,6 +13,8 @@ const listOfPokemonShow: Ref<NotFullDataPokemon[]> = ref([]);
 const searchedPokemon = ref('');
 const apiUrl: string = 'https://pokeapi.co/api/v2/';
 const filteredItems: Ref<Pokemon[]> = ref([]);
+const itemsToShow: Ref<number> = ref(24);
+const totalPokemon: Ref<number> = ref(1015);
 
 // Fonction pour récupérer un Pokémon par nom
 const fetchSearchedPokemon = async (pokemonName: string) => {
@@ -35,9 +37,9 @@ const fetchAllPokemons = async (limit: string, offset: string) => {
     }
 };
 
-// reset du field
+// Réinitialisation du champ de recherche
 const clearField = async () => {
-    searchedPokemon.value = ""
+    searchedPokemon.value = "";
 };
 
 // Tri des Pokémon par nom
@@ -45,7 +47,17 @@ const sortPokemonList = () => {
     pokemon.value.sort((a, b) => a.name.localeCompare(b.name));
 };
 
+// Afficher plus de Pokémon
+const showMore = () => {
+    itemsToShow.value = Math.min(itemsToShow.value + 20, totalPokemon.value);
+};
 
+// Réduire le nombre de Pokémon affichés
+const showLess = () => {
+    itemsToShow.value = Math.max(itemsToShow.value - 20, 20);
+};
+
+// Gestion des recherches
 watchEffect(() => {
     if (searchedPokemon.value.trim() === '') {
         pokemon.value = [...filteredItems.value];
@@ -56,7 +68,7 @@ watchEffect(() => {
     }
 });
 
-// Chargement des Pokemons
+// Chargement des Pokémons
 onMounted(async () => {
     await fetchAllPokemons('1015', '0');
     const fetchPromises = listOfPokemonShow.value.map(el => fetchSearchedPokemon(el.name));
@@ -108,7 +120,7 @@ onMounted(async () => {
             <!-- Liste des Pokémon -->
             <div v-if="pokemon.length !== 0"
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 border-t b-gray-700 pt-4 pb-4">
-                <PokemonCard v-for="poke in pokemon.slice(0, 24)" :key="poke.id" :name="poke.name"
+                <PokemonCard v-for="poke in pokemon.slice(0, itemsToShow)" :key="poke.id" :name="poke.name"
                     :image="poke.sprites.front_default" />
             </div>
 
@@ -122,6 +134,20 @@ onMounted(async () => {
                     recherche !
                 </p>
             </div>
+
+            <div class="flex justify-center gap-3">
+                <div>
+                    <button v-if="itemsToShow < totalPokemon" @click="showMore" class="btn btn-outline rounded-xl">
+                        Afficher plus
+                    </button>
+                </div>
+                <div>
+                    <button v-if="itemsToShow > 24" @click="showLess" class="btn btn-outline rounded-xl">
+                        Afficher moins
+                    </button>
+                </div>
+            </div>
+
         </div>
         <FooterBar />
     </div>
