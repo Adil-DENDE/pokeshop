@@ -18,7 +18,7 @@
       <nav class="hidden lg:block">
         <ul class="flex gap-8 text-lg">
           <li class="hover:text-warning cursor-pointer">
-            <RouterLink to="/">Acceuil</RouterLink>
+            <RouterLink to="/">Accueil</RouterLink>
           </li>
           <li class="hover:text-warning cursor-pointer">
             <RouterLink to="/pokemon">Pokemons</RouterLink>
