@@ -108,9 +108,10 @@ onMounted(async () => {
             <!-- Liste des Pokémon -->
             <div v-if="pokemon.length !== 0"
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 border-t b-gray-700 pt-4 pb-4">
-                <PokemonCard v-for="poke in pokemon" :key="poke.id" :name="poke.name"
+                <PokemonCard v-for="poke in pokemon.slice(0, 24)" :key="poke.id" :name="poke.name"
                     :image="poke.sprites.front_default" />
             </div>
+
             <div v-else-if="pokemon.length == 0 && !searchedPokemon"
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 border-t b-gray-700 pt-4 pb-4">
                 <SkeletonCard />
