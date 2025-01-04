@@ -5,7 +5,7 @@
         </div>
         <div class="mt-4 text-center">
             <h2 class="text-lg text-warning font-bold">{{ props.name?.toLocaleUpperCase() }}</h2>
-            <p class="text-white">Type: Feu</p>
+            <p class="text-white">Type: {{ type }}</p>
         </div>
         <button class="btn btn-circle btn-warning mt-4 w-full">
             Ajouter aux Favoris
@@ -17,6 +17,8 @@
 const props = defineProps({
     name: String,
     image: String,
+    type: String,
 })
+
 
 </script>

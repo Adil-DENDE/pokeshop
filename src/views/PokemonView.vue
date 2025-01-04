@@ -6,6 +6,7 @@ import PokemonCard from '@/components/ui/PokemonCard.vue';
 import axios from 'axios';
 import { onMounted, ref, watchEffect, type Ref } from 'vue';
 import type { NotFullDataPokemon, Pokemon } from '@/Interfaces/Pokemon';
+import LoadingComponent from '@/components/ui/LoadingComponent.vue';
 
 // Références réactives pour la gestion de l'état
 const pokemon: Ref<Pokemon[]> = ref([]);
@@ -96,8 +97,9 @@ onMounted(async () => {
                     </label>
                 </div>
 
+                <!-- PLUS TARD PEUT ETRE -->
                 <!-- Filtres -->
-                <div class="form-control w-full lg:w-1/4">
+                <!-- <div class="form-control w-full lg:w-1/4">
                     <label class="input-group">
                         <span class="text-white">Filtrer</span>
                         <select class="select select-bordered select-warning w-full">
@@ -109,7 +111,7 @@ onMounted(async () => {
                             <option>Roche</option>
                         </select>
                     </label>
-                </div>
+                </div> -->
 
                 <!-- Bouton de tri -->
                 <button class="btn btn-neutral btn-outline btn-sm w-full lg:w-auto" @click="sortPokemonList">
@@ -120,8 +122,14 @@ onMounted(async () => {
             <!-- Liste des Pokémon -->
             <div v-if="pokemon.length !== 0"
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 border-t b-gray-700 pt-4 pb-4">
-                <PokemonCard v-for="poke in pokemon.slice(0, itemsToShow)" :key="poke.id" :name="poke.name"
-                    :image="poke.sprites.front_default" />
+                <Suspense>
+                    <PokemonCard v-for="poke in pokemon.slice(0, itemsToShow)" :key="poke.id" :name="poke.name"
+                        :image="poke.sprites.front_default"
+                        :type="poke.types.map(type => type.type.name)[0].toUpperCase()" />
+                    <template #fallback>
+                        <LoadingComponent />
+                    </template>
+                </Suspense>
             </div>
 
             <div v-else-if="pokemon.length == 0 && !searchedPokemon"
@@ -137,12 +145,14 @@ onMounted(async () => {
 
             <div class="flex justify-center gap-3">
                 <div>
-                    <button v-if="itemsToShow < totalPokemon" @click="showMore" class="btn btn-outline rounded-xl">
+                    <button v-if="itemsToShow < totalPokemon && !searchedPokemon" @click="showMore"
+                        class="btn btn-outline rounded-xl">
                         Afficher plus
                     </button>
                 </div>
                 <div>
-                    <button v-if="itemsToShow > 24" @click="showLess" class="btn btn-outline rounded-xl">
+                    <button v-if="itemsToShow > 24 && !searchedPokemon" @click="showLess"
+                        class="btn btn-outline rounded-xl">
                         Afficher moins
                     </button>
                 </div>
