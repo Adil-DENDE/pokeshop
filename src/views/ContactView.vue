@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FooterBar from '@/components/FooterBar/FooterBar.vue';
 import NavigationBar from '@/components/NavigationBar/NavigationBar.vue';
+import ContactForm from '@/components/ui/ContactForm.vue';
 import { CircleUserRoundIcon, Github, Instagram, Linkedin, Twitter } from 'lucide-vue-next';
 </script>
 
@@ -46,10 +47,12 @@ import { CircleUserRoundIcon, Github, Instagram, Linkedin, Twitter } from 'lucid
             <!-- Bouton pour contacter -->
             <div class="mt-10">
                 <button
-                    class="btn btn-warning btn-outline font-bold py-3 px-6 rounded-full shadow-lg">
+                    class="btn btn-warning btn-outline font-bold py-3 px-6 rounded-full shadow-lg"
+                    onclick="contact_modal.showModal()">
                     Me Contacter
                 </button>
             </div>
+            <ContactForm />
         </div>
 
         <FooterBar />
